@@ -1,0 +1,142 @@
+{
+    "problem": {
+        "name":"MIP1",
+        "type":"MIP"
+    },
+    "objective":{
+        "type":"minimize",
+        "function_type":"linear",
+        "linear_terms":{
+            "(Resource1,Job1)": 53,
+            "(Resource1,Job2)": 27,
+            "(Resource1,Job3)": 13,
+            "(Resource2,Job1)": 80,
+            "(Resource2,Job2)": 47,
+            "(Resource2,Job3)": 67,
+            "(Resource3,Job1)": 53,
+            "(Resource3,Job2)": 73,
+            "(Resource3,Job3)": 47
+
+        }
+    },
+    "variables":{
+        "(Resource1,Job1)": {
+            "type": "binary",
+            "name": "x_Resource1_Job1",
+            "lower_bound": 0,
+            "upper_bound": 1
+        },
+        "(Resource1,Job2)": {
+            "type": "binary",
+            "name": "x_Resource1_Job2",
+            "lower_bound": 0,
+            "upper_bound": 1
+        },
+        "(Resource1,Job3)": {
+            "type": "binary",
+            "name": "x_Resource1_Job3",
+            "lower_bound": 0,
+            "upper_bound": 1
+        },
+        "(Resource2,Job1)": {
+            "type": "binary",
+            "name": "x_Resource2_Job1",
+            "lower_bound": 0,
+            "upper_bound": 1
+        },
+        "(Resource2,Job2)": {
+            "type": "binary",
+            "name": "x_Resource2_Job2",
+            "lower_bound": 0,
+            "upper_bound": 1
+        },
+        "(Resource2,Job3)": {
+            "type": "binary",
+            "name": "x_Resource2_Job3",
+            "lower_bound": 0,
+            "upper_bound": 1
+        },
+        "(Resource3,Job1)": {
+            "type": "binary",
+            "name": "x_Resource3_Job1",
+            "lower_bound": 0,
+            "upper_bound": 1
+        },
+        "(Resource3,Job2)": {
+            "type": "binary",
+            "name": "x_Resource3_Job2",
+            "lower_bound": 0,
+            "upper_bound": 1
+        },
+        "(Resource3,Job3)": {
+            "type": "binary",
+            "name": "x_Resource3_Job3",
+            "lower_bound": 0,
+            "upper_bound": 1
+        }
+    },
+    "constraints":{
+        "linear_constraints": [
+            {
+                "lhs":{
+                    "(Resource1,Job1)": 1,
+                    "(Resource1,Job2)": 1,
+                    "(Resource1,Job3)": 1
+                },
+                "rhs": 1,
+                "sense":"=",
+                "name":"Resource1_Constraint"
+            },
+            {
+                "lhs":{
+                    "(Resource2,Job1)": 1,
+                    "(Resource2,Job2)": 1,
+                    "(Resource2,Job3)": 1
+                },
+                "rhs": 1,
+                "sense":"=",
+                "name":"Resource2_Constraint"
+            },
+            {
+                "lhs":{
+                    "(Resource3,Job1)": 1,
+                    "(Resource3,Job2)": 1,
+                    "(Resource3,Job3)": 1
+                },
+                "rhs": 1,
+                "sense":"=",
+                "name":"Resource3_Constraint"
+            },
+            {
+                "lhs":{
+                    "(Resource1,Job1)": 1,
+                    "(Resource2,Job1)": 1,
+                    "(Resource3,Job1)": 1
+                },
+                "rhs": 1,
+                "sense":"<=",
+                "name":"Job1_Constraint"
+            },
+            {
+                "lhs":{
+                    "(Resource1,Job2)": 1,
+                    "(Resource2,Job2)": 1,
+                    "(Resource3,Job2)": 1
+                },
+                "rhs": 1,
+                "sense":"<=",
+                "name":"Job2_Constraint"
+            },
+            {
+                "lhs":{
+                    "(Resource1,Job3)": 1,
+                    "(Resource2,Job3)": 1,
+                    "(Resource3,Job3)": 1
+                },
+                "rhs": 1,
+                "sense":"<=",
+                "name":"Job3_Constraint"
+            }
+        ]
+    }
+}
