@@ -4,7 +4,7 @@ from mcp.server.fastmcp import FastMCP
 import sys
 import io
 from mcp import types
-from Problem import LP,NLP,QP
+from Problem import LP,QP,QCP
 # Create an MCP server
 mcp = FastMCP("GurobiLLM")
 
@@ -29,7 +29,7 @@ async def GurobiSolver(problem: dict) -> int:
                 {    
                     "problem": {
                         "name": {"type":"string"},
-                        "type": {"type": "string", "enum": ["LP", "MILP"]},
+                        "type": {"type": "string", "enum": ["LP", "MILP", "QP", "MIQP", "QCP", "MIQCP"]},
                         "required":["type"]
                     },
                     "objective": {
@@ -120,10 +120,10 @@ def createProblem(problem: dict):
     type = problem["problem"]["type"]
     if type == "LP" or type == "MILP":
         return LP(problem)
-    elif type == "NLP" or type == "MINLP" :
-        return NLP(problem)
     elif type == "QP" or type == "MIQP":
         return QP(problem)
+    elif type == "QCP" or type == "MIQCP":
+        return QCP(problem)
     else:
         raise ValueError(f"Unsupported problem type: {type}")
 

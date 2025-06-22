@@ -1,4 +1,4 @@
-from OptimizationProblem import OptimizationProblem
+from .OptimizationProblem import OptimizationProblem
 import sys
 import io
 import gurobipy as gp
