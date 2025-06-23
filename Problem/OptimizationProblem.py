@@ -18,7 +18,7 @@ class OptimizationProblem(ABC):
     def _create_model(self):
         pass
 
-    def get_model(self):
+    def getModel(self):
         return self._model
     
     def getProblemAsLP(self, filename: str="problem.lp"):
