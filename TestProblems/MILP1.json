@@ -1,6 +1,6 @@
 {
     "problem": {
-        "name":"MIP1",
+        "name":"MILP1",
         "type":"MIP"
     },
     "objective":{

@@ -118,7 +118,7 @@ async def GurobiSolver(problem: dict) -> int:
     
 def createProblem(problem: dict):
     type = problem["problem"]["type"]
-    if type == "LP" or type == "MILP":
+    if type == "LP" or type == "MIP":
         return LP(problem)
     elif type == "QP" or type == "MIQP":
         return QP(problem)
