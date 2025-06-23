@@ -44,18 +44,18 @@ class OptimizationProblem(ABC):
         
         for constraint in linear_constraints:
             lhs_expr = quicksum(constraint["lhs"][var] * self._gurobi_variables[var] for var in constraint["lhs"])
-            if constraint["operator"] == "<=":
+            if constraint["sign"] == "<=":
                 self._model.addConstr(lhs_expr <= constraint["rhs"], name=constraint.get("name", "Constraint_" + str(default_constr_index)))
-            elif constraint["operator"] == "<":
+            elif constraint["sign"] == "<":
                 self._model.addConstr(lhs_expr < constraint["rhs"], name=constraint.get("name", "Constraint_" + str(default_constr_index)))
-            elif constraint["operator"] == ">=":
+            elif constraint["sign"] == ">=":
                 self._model.addConstr(lhs_expr >= constraint["rhs"], name=constraint.get("name", "Constraint_" + str(default_constr_index)))
-            elif constraint["operator"] == ">":
+            elif constraint["sign"] == ">":
                 self._model.addConstr(lhs_expr >= constraint["rhs"], name=constraint.get("name", "Constraint_" + str(default_constr_index)))
-            elif constraint["operator"] == "=":
+            elif constraint["sign"] == "=":
                 self._model.addConstr(lhs_expr == constraint["rhs"], name=constraint.get("name", "Constraint_" + str(default_constr_index)))
             else:
-                raise ValueError(f"Unknown operator {constraint['operator']} in constraint: {constraint.get('name', '')}")
+                raise ValueError(f"Unknown sign {constraint['sign']} in constraint: {constraint.get('name', '')}")
         
             default_constr_index += 1
         self._model.update()
