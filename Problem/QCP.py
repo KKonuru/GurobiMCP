@@ -6,8 +6,8 @@ from gurobipy import Model, GRB, quicksum
 
 #This class is used to create Quadratic Constrained Programming (QCP) models and also can be extended for Mixed Integer Quadratic Constrained Programming (MIQCP) models.
 class QCP(OptimizationProblem):
-    def __init__(self, name: str, problem: dict):
-        super().__init__(name, problem)  # class create model
+    def __init__(self, problem: dict):
+        super().__init__(problem)  # class create model
 
     #Here we deal with quadratic constraints and objective functions.
     #Only at leat one constraint has to be quadratic and the rest can be linear.

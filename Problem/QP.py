@@ -5,8 +5,8 @@ import gurobipy as gp
 from gurobipy import Model, GRB, quicksum
 #This class is used to create Qudratic Programming (QP) models and can also be extended for Mixed Integer Quadratic Programming (MIQP) models.
 class QP(OptimizationProblem):
-    def __init__(self, name: str, problem: dict):
-        super().__init__(name, problem) #class create model
+    def __init__(self,problem: dict):
+        super().__init__(problem) #class create model
 
     def _create_model(self):
 

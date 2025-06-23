@@ -6,8 +6,8 @@ from gurobipy import Model, GRB, quicksum
 import os
 #This class is used to create Linear Programming (LP) models and can also be extended for Mixed Integer Linear Programming (MILP) models.
 class LP(OptimizationProblem):
-    def __init__(self, name: str, problem: dict):
-        super().__init__(name, problem) #class create model
+    def __init__(self,problem: dict):
+        super().__init__( problem) #class create model
         self._create_model()  # Call the method to create the model
         
     def _create_model(self):
