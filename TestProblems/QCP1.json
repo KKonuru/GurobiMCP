@@ -1,0 +1,48 @@
+{
+  "problem": {
+    "name": "QCPExample",
+    "type": "QCP"
+  },
+  "objective": {
+    "type": "minimize",
+    "function_type": "quadratic",
+    "linear_terms": {
+      "x": 1,
+      "y": 2
+    },
+    "quadratic_terms": [
+      { "var1": "x", "var2": "x", "coef": 1 },
+      { "var1": "y", "var2": "y", "coef": 2 }
+    ]
+  },
+  "variables": {
+    "x": { "type": "continuous", "name": "x", "lb": 0 },
+    "y": { "type": "continuous", "name": "y", "lb": 0 }
+  },
+  "constraints": {
+    "linear_constraints": [
+      {
+        "lhs": { "x": 1, "y": 1 },
+        "rhs": 5,
+        "sign": "<=",
+        "name": "c1"
+      }
+    ],
+    "quadratic_constraints": [
+      {
+        "quadratic_terms": [
+          { "var1": "x", "var2": "x", "coef": 1 },
+          { "var1": "x", "var2": "y", "coef": 0.5 },
+          { "var1": "y", "var2": "y", "coef": 1 }
+        ],
+        "linear_terms": {
+          "x": -1,
+          "y": 0
+        },
+        "constant": -2,
+        "sign": "<=",
+        "name": "qc1"
+      }
+    ]
+  }
+}
