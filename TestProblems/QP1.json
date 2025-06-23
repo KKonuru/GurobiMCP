@@ -1,0 +1,40 @@
+{
+  "problem": {
+    "name": "SimpleQP",
+    "type": "QP"
+  },
+  "objective": {
+    "type": "minimize",
+    "function_type": "quadratic",
+    "linear_terms": {
+      "x": 3,
+      "y": 4
+    },
+    "quadratic_terms": [
+      { "var1": "x", "var2": "x", "coef": 2 },
+      { "var1": "x", "var2": "y", "coef": 1 },
+      { "var1": "y", "var2": "y", "coef": 1 }
+    ]
+  },
+  "variables": {
+    "x": { "type": "continuous", "name": "x", "lb": 0 },
+    "y": { "type": "continuous", "name": "y", "lb": 0 }
+  },
+  "constraints": {
+    "linear_constraints": [
+      {
+        "lhs": { "x": 1, "y": 2 },
+        "rhs": 10,
+        "sign": "<=",
+        "name": "c1"
+      },
+      {
+        "lhs": { "x": 3 },
+        "rhs": 4,
+        "sign": ">=",
+        "name": "c2"
+      }
+    ],
+    "quadratic_constraints": []
+  }
+}
