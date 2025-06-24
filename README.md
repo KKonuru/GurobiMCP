@@ -15,14 +15,17 @@ The MCP server accounts for the following problem types:
 # How to setup the server in Claude desktop?
 Note: If Claude desktop is not already downloaded, download it here: https://claude.ai/download
 1. Clone the repository
-```
+```bash
 git clone https://github.com/KKonuru/GurobiMCP.git
 ```
 or download the project as a zip and unzip in your repo directory
 
 2. Enter the project directory, create a virtual environment, and install packages listed in requirements.txt
-```
-
+```bash
+cd GurobiMCP
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 3. Copy the full path of your python interpreter in .venv folder and the main.py file in your package. Then open claude desktop and open settings. 
@@ -30,7 +33,7 @@ or download the project as a zip and unzip in your repo directory
 In settings click on the developer tab on the left side of the page. Then click open edit config which will open file explorer. 
 
 Open the file named "claude_desktop_config.json". Here modify the file such as stated below but replace the command and args with the two paths copied earlier.
-```
+```bash
 {
     "mcpServers": {
     "gp-solver": {
