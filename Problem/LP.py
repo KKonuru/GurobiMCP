@@ -8,7 +8,6 @@ import os
 class LP(OptimizationProblem):
     def __init__(self,problem: dict):
         super().__init__( problem) #class create model
-        self._create_model()  # Call the method to create the model
         
     def _create_model(self):
         #Direct all output to string buffer to suppress Gurobi console output
@@ -31,7 +30,7 @@ class LP(OptimizationProblem):
         except Exception as e:
             print(f"An error occurred while creating the model: {e}")
             self._model = None
-            raise e
+            raise e from e
         finally:
             sys.stdout = old_stdout
             sys.stderr = old_stderr

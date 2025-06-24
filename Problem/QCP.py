@@ -23,15 +23,13 @@ class QCP(OptimizationProblem):
             self._model = Model(self._name)
             self._model.setParam('OutputFlag', 0)
             self._model.setParam('LogToConsole', 0)
-
+            
             self._addVariables()  # Add variables to the model
             self._addLinearConstraints()  # Add linear constraints to the model
             self._addQuadraticConstraints()  # Add quadratic constraints to the model
-            
             self._addQuadraticObjective()  
         except Exception as e:
             self._model = None
-            print(f"Error creating model: {e}")
             raise e from e
         finally:
             # Change output back to console

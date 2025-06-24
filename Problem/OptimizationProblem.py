@@ -12,6 +12,7 @@ class OptimizationProblem(ABC):
         self._model = None
         self._solution = None
         self._status = None
+        self._create_model()  # Call the method to create the model
         
     
     @abstractmethod
@@ -152,11 +153,11 @@ class OptimizationProblem(ABC):
             raise ValueError("Objective function type must be quadratic for QP problems. Use LP for linear objectives.")
         
         if objective["type"]=="maximize":
-            obj_expr = quicksum(objective["quadratic_terms"][term]["coef"] * self._gurobi_variables[term["var1"]] * self._gurobi_variables[term["var2"]] for term in objective["quadratic_terms"])
+            obj_expr = quicksum(term["coef"] * self._gurobi_variables[term["var1"]] * self._gurobi_variables[term["var2"]] for term in objective["quadratic_terms"])
             obj_expr += quicksum(objective["linear_terms"][var] * self._gurobi_variables[var] for var in objective["linear_terms"])
             self._model.setObjective(obj_expr, GRB.MAXIMIZE)
         elif objective["type"]=="minimize":
-            obj_expr = quicksum(objective["quadratic_terms"][term]["coef"] * self._gurobi_variables[term["var1"]] * self._gurobi_variables[term["var2"]] for term in objective["quadratic_terms"])
+            obj_expr = quicksum(term["coef"] * self._gurobi_variables[term["var1"]] * self._gurobi_variables[term["var2"]] for term in objective["quadratic_terms"])
             obj_expr += quicksum(objective["linear_terms"][var] * self._gurobi_variables[var] for var in objective["linear_terms"])
             self._model.setObjective(obj_expr, GRB.MINIMIZE)
         else:
