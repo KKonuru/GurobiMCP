@@ -43,5 +43,8 @@ Open the file named "claude_desktop_config.json". Here modify the file such as s
 }
 ```
 4. Restart Claude desktop and the tool should appear after clicking the second icon on the left.
+![image](https://github.com/user-attachments/assets/dc89dc9f-a3bc-45a1-81a4-933a4207a082)
 The prompt also appears when clicking the + icon
+![image](https://github.com/user-attachments/assets/ddc17c06-4b20-47bd-b32f-1b8948379ce2)
+
 
