@@ -1,10 +1,10 @@
 {
     "problem": {
         "name":"MILP1",
-        "type":"MIP"
+        "type":"MILP"
     },
     "objective":{
-        "type":"minimize",
+        "type":"maximize",
         "function_type":"linear",
         "linear_terms":{
             "(Resource1,Job1)": 53,
