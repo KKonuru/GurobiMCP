@@ -8,6 +8,8 @@ from Problem import LP,QP,QCP
 # Create an MCP server
 mcp = FastMCP("GurobiLLM")
 
+supported_problem_types = ["LP", "MILP", "QP", "MIQP", "QCP", "MIQCP"]
+
 @mcp.tool()
 async def GurobiSolver(problem: dict) -> int:
     """
@@ -190,7 +192,19 @@ async def GurobiSolver(problem: dict) -> int:
     except Exception as e:
         return f"Error: Problem type is not specified. {str(e)}"
     
-    
+#Create prompt for formulating the problem
+@mcp.prompt()
+def GurobiSolverPrompt(problem: str) -> str:
+    return f"""
+    You are a expert in optmization whose job is to take real world problems and formulate it as optimization problem that can be solved with the gurobi tool call accessible to you.
+    You must determine the best problem formulation such that the solver can get the optimal solution quickly. The user will provide you with a problem description 
+    and you will need to create a mathematical optimization model that can be solved using Gurobi. You will need to define the problem type, objective function, variables, and constraints based on the provided problem description.
+    The problem must be formated as a problem of type {supported_problem_types}. You will take you formulation and create a json of the formulation according to the tool docstring to make the tool call.
+    The problem is as follows:
+    {problem}
+    """
+
+
 def createProblem(problem: dict):
     type = problem["problem"]["type"]
     if type == "LP" or type == "MILP":
