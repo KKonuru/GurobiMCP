@@ -28,10 +28,12 @@ class QCP(OptimizationProblem):
             self._addLinearConstraints()  # Add linear constraints to the model
             self._addQuadraticConstraints()  # Add quadratic constraints to the model
             
-            self._addLinearObjective()  
+            self._addQuadraticObjective()  
         except Exception as e:
             self._model = None
             print(f"Error creating model: {e}")
-        # Change output back to console
-        sys.stdout = old_stdout
-        sys.stderr = old_stderr
+            raise e from e
+        finally:
+            # Change output back to console
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
