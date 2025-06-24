@@ -1,0 +1,115 @@
+{
+    "problem": {
+        "type": "object",
+        "properties": {
+            "name": {"type": "string"},
+            "type": {
+                "type": "string",
+                "enum": ["LP", "MILP", "QP", "MIQP", "QCP", "MIQCP"]
+            }
+        },
+        "required": ["type"],
+        "optional": ["name"]
+    },
+    "objective": {
+        "type": "object",
+        "properties": {
+            "type": {"type": "string", "enum": ["minimize", "maximize"]},
+            "function_type": {"type": "string", "enum": ["linear", "quadratic"]},
+            "linear_terms": {"type": "object",
+                "patternProperties": {
+                    "^.*$": {"type": "number"}
+                }
+            },
+            "quadratic_terms": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "var1": {"type": "string"},
+                        "var2": {"type": "string"},
+                        "coef": {"type": "number"}
+                    },
+                    "required": ["var1", "var2", "coef"]
+                }
+            }
+        },
+        "required": ["type", "function_type", "linear_terms"],
+        "optional": ["quadratic_terms"]
+    },
+    "variables": {
+        "type": "object",
+        "patternProperties": {
+            "^.*$": {
+                "type": "object",
+                "properties": {
+                    "type": {"type": "string"},
+                    "name": {"type": "string"},
+                    "lb": {"type": "number"},
+                    "ub": {"type": "number"}
+                },
+                "required": ["type"],
+                "optional": ["name", "lb", "ub"]
+            }
+        }
+    },
+    "constraints": {
+        "type": "object",
+        "properties": {
+            "linear_constraints": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "lhs": {"type": "object",
+                            "patternProperties": {
+                                "^.*$": {"type": "number"}
+                            }
+                        },
+                        "rhs": {"type": "number"},
+                        "sign": {"type": "string",
+                            "enum": ["=", "<=", ">=", "<", ">"]
+                        },
+                        "name": {"type": "string"}
+                    },
+                    "required": ["lhs", "rhs", "sign"],
+                    "optional": ["name"]
+                }
+            },
+            "quadratic_constraints": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "quadratic_terms": {"type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "var1": {"type": "string"},
+                                    "var2": {"type": "string"},
+                                    "coef": {"type": "number"}
+                                },
+                                "required": ["var1", "var2", "coef"]
+                            }
+                        },
+                        "linear_terms": {"type": "object",
+                            "patternProperties": {
+                                "^.*$": {"type": "number"}
+                            }
+                        },
+                        "constant": {"type": "number"},
+                        "sign": {"type": "string",
+                            "enum": ["=", "<=", ">=", "<", ">"]
+                        },
+                        "name": {"type": "string"}
+                    },
+                    "required": ["quadratic_terms", "linear_terms", "sign"],
+                    "optional": ["constant", "name"]
+                }
+            }
+        }
+    },
+    "required": ["problem", "objective", "variables", "constraints"]
+}
+                
+            
