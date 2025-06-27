@@ -1,4 +1,4 @@
-from main import GurobiSolver,createProblem
+from main import GurobiSolver,createProblem,ProblemToLP
 from Problem import LP, QP, QCP
 import os
 import json
@@ -57,3 +57,10 @@ async def testGurobiSolverQCP():
     assert isinstance(result, dict), "Result should be a dictionary"
     assert result.get("status")==2, "Expected status to be OPTIMAL(2)"
     assert isinstance(result["solution"],dict), "Solution should be a dictionary"
+
+@pytest.mark.asyncio
+async def testProblemToLPTool():
+    result = await ProblemToLP(milp)
+    assert isinstance(result,str), "Result should be a string"
+    assert "Maximize" in result, "Result should contain 'Maximize'"
+    assert "3 x_Resource1_Job1 + 27 x_Resource1_Job2 + 13 x_Resource1_Job3" in result, "Result should contain the objective function"
