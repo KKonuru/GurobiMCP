@@ -1,6 +1,7 @@
 from abc import ABC,abstractmethod
 import os
 from gurobipy import Model, GRB, quicksum
+import tempfile
 class OptimizationProblem(ABC):
     def __init__(self,problem:dict):
         self._name = problem["problem"].get("name", "OptimizationProblem")
@@ -27,12 +28,14 @@ class OptimizationProblem(ABC):
         Write the LP problem to a file in LP format.
         """
         if self._model is not None:
-            self._model.write(filename)
-            with open(filename, "r") as f:
-                lp_string = f.read()
-
-             # Delete the temporary file
-            os.remove(filename)
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".lp",mode='w+') as tmp:
+                try:
+                    self._model.write(tmp.name)
+                    tmp.seek(0)  # Move to the beginning of the file
+                    lp_string = tmp.read()
+                finally:
+                    tmp.close()
+                    os.unlink(tmp.name)
             return lp_string
         else:
             return "Model is not created. Cannot write problem to file."
