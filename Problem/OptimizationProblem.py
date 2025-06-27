@@ -33,6 +33,7 @@ class OptimizationProblem(ABC):
 
              # Delete the temporary file
             os.remove(filename)
+            return lp_string
         else:
             return "Model is not created. Cannot write problem to file."
     
