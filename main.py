@@ -4,16 +4,16 @@ from mcp.server.fastmcp import FastMCP
 import sys
 import io
 from mcp import types
-from Problem import LP,QP,QCP
+from Problem import LP,QP,QCP,OptimizationProblem
 # Create an MCP server
 mcp = FastMCP("GurobiLLM")
 
 supported_problem_types = ["LP", "MILP", "QP", "MIQP", "QCP", "MIQCP"]
 
 @mcp.tool()
-async def GurobiSolver(problem: dict) -> int:
+async def GurobiSolver(problem: dict):
     """
-     Solve a linear programming problem using Gurobi.
+     Solve a optimization problem using Gurobi.
             Terminology:
             - "Objective Function": The function to be maximized or minimized.
             - "Constraints": The conditions that the solution must satisfy.
@@ -191,7 +191,177 @@ async def GurobiSolver(problem: dict) -> int:
             return f"Error: Optimization failed with status {model.status}. Please check the problem definition."
     except Exception as e:
         return f"Error: Problem type is not specified. {str(e)}"
+
+@mcp.tool()
+async def ProblemToLP(problem: dict):
+    """
+     Retuns the content of the problem written into the LP format file. 
+     Must describe problem using the input schema defined below.
+    Terminology:
+    - "Objective Function": The function to be maximized or minimized.
+    - "Constraints": The conditions that the solution must satisfy.
+    Supported problem types:
+    - Linear Programming (LP)
+    - Mixed Integer Linear Programming (MILP)
+    - Quadratic Programming (QP)
+    - Mixed Integer Quadratic Programming (MIQP)
+    - Quadratic Constrained Programming (QCP)
+    - Mixed Integer Quadratic Constrained Programming (MIQCP)
     
+    For problem types such as LP,MILP,QP,MIQP do not include key "quadratic_constraints" in the constraints section.
+    For problem types such as LP,MILP do not include the key "quadratic_terms" in the objective section.
+    input_schema = {
+                        "problem": {
+                            "type": "object",
+                            "properties": {
+                                "name": {"type": "string"},
+                                "type": {
+                                    "type": "string",
+                                    "enum": ["LP", "MILP", "QP", "MIQP", "QCP", "MIQCP"]
+                                }
+                            },
+                            "required": ["type"],
+                            "optional": ["name"]
+                        },
+                        "objective": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"type": "string", "enum": ["minimize", "maximize"]},
+                                "function_type": {"type": "string", "enum": ["linear", "quadratic"]},
+                                "linear_terms": {"type": "object",
+                                    "patternProperties": {
+                                        "^.*$": {"type": "number"}
+                                    }
+                                },
+                                "quadratic_terms": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "var1": {"type": "string"},
+                                            "var2": {"type": "string"},
+                                            "coef": {"type": "number"}
+                                        },
+                                        "required": ["var1", "var2", "coef"]
+                                    }
+                                }
+                            },
+                            "required": ["type", "function_type", "linear_terms"],
+                            "optional": ["quadratic_terms"]
+                        },
+                        "variables": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {"type": "string"},
+                                        "name": {"type": "string"},
+                                        "lb": {"type": "number"},
+                                        "ub": {"type": "number"}
+                                    },
+                                    "required": ["type"],
+                                    "optional": ["name", "lb", "ub"]
+                                }
+                            }
+                        },
+                        "constraints": {
+                            "type": "object",
+                            "properties": {
+                                "linear_constraints": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "lhs": {"type": "object",
+                                                "patternProperties": {
+                                                    "^.*$": {"type": "number"}
+                                                }
+                                            },
+                                            "rhs": {"type": "number"},
+                                            "sign": {"type": "string",
+                                                "enum": ["=", "<=", ">=", "<", ">"]
+                                            },
+                                            "name": {"type": "string"}
+                                        },
+                                        "required": ["lhs", "rhs", "sign"],
+                                        "optional": ["name"]
+                                    }
+                                },
+                                "quadratic_constraints": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "quadratic_terms": {"type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "var1": {"type": "string"},
+                                                        "var2": {"type": "string"},
+                                                        "coef": {"type": "number"}
+                                                    },
+                                                    "required": ["var1", "var2", "coef"]
+                                                }
+                                            },
+                                            "linear_terms": {"type": "object",
+                                                "patternProperties": {
+                                                    "^.*$": {"type": "number"}
+                                                }
+                                            },
+                                            "constant": {"type": "number"},
+                                            "sign": {"type": "string",
+                                                "enum": ["=", "<=", ">=", "<", ">"]
+                                            },
+                                            "name": {"type": "string"}
+                                        },
+                                        "required": ["quadratic_terms", "linear_terms", "sign"],
+                                        "optional": ["constant", "name"]
+                                    }
+                                }
+                            }
+                        },
+                        "required": ["problem", "objective", "variables", "constraints"]
+                    }
+
+            Example input (QP):
+            {
+                "problem": {
+                    "name": "Example QP",
+                    "type": "QP"
+                },
+                "objective": {
+                    "type": "minimize",
+                    "function_type": "quadratic",
+                    "linear_terms": {"x": 3, "y": 4},
+                    "quadratic_terms": [
+                    {"var1": "x", "var2": "x", "coef": 1},
+                    {"var1": "x", "var2": "y", "coef": 2},
+                    {"var1": "y", "var2": "y", "coef": 3}
+                    ]
+                },
+                "variables": {
+                    "x": {"type": "continuous", "lb": 0},
+                    "y": {"type": "continuous", "lb": 0, "ub": 1}
+                },
+                "constraints": {
+                    "linear_constraints": [
+                        {
+                            "lhs": {"x": 2, "y": 1},
+                            "rhs": 10,
+                            "sign": "<=",
+                            "name": "c1"
+                        }
+                    ]
+                }
+            }
+    """
+    try:
+        problem = createProblem(problem)
+        result = problem.getProblemAsLP()
+        return result
+    except Exception as e:
+        return f"Error: Problem type is not specified. {str(e)}"
 #Create prompt for formulating the problem
 @mcp.prompt()
 def GurobiSolverPrompt(problem: str) -> str:
@@ -205,7 +375,7 @@ def GurobiSolverPrompt(problem: str) -> str:
     """
 
 
-def createProblem(problem: dict):
+def createProblem(problem: dict) -> OptimizationProblem:
     type = problem["problem"]["type"]
     if type == "LP" or type == "MILP":
         return LP(problem)
