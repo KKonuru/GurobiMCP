@@ -23,7 +23,7 @@ class OptimizationProblem(ABC):
     def getModel(self):
         return self._model
     
-    def getProblemAsLP(self, filename: str="problem.lp"):
+    def getProblemAsLP(self) -> str:
         """
         Write the LP problem to a file in LP format.
         """
